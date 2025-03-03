@@ -48,7 +48,7 @@ python ./err_add/imagenet/cache_draw.py --error cache
 ```bash
 python ./mainldm/sample_cachequant_imagenet_params.py
 ```
-5. Calculate DEC for and Quant
+5. Calculate DEC for Quantization
 ```bash
 python ./err_add/imagenet/cache_draw.py --error quant
 ```
