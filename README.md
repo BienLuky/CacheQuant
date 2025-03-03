@@ -3,7 +3,7 @@
 
 ## Introduction
 This repository contains the official PyTorch implementation for the CVPR2025 paper
-*"CacheQuant: Comprehensively Accelerated Diffusion Models".* CacheQuant introduces a novel training-free paradigm that comprehensively accelerates diffusion models at both temporal and structural levels. The DPS selects the optimal cache schedule to minimize errors caused by caching and quantization. The DEC further mitigates the coupled and accumulated errors based on the strong correlation of feature maps.
+*["CacheQuant: Comprehensively Accelerated Diffusion Models"](http://arxiv.org/abs/2503.01323).* CacheQuant introduces a novel training-free paradigm that comprehensively accelerates diffusion models at both temporal and structural levels. The DPS selects the optimal cache schedule to minimize errors caused by caching and quantization. The DEC further mitigates the coupled and accumulated errors based on the strong correlation of feature maps.
 <!-- *["CacheQuant: Comprehensively Accelerated Diffusion Models"](-).* -->
 <div align=center>
   <img src="assets/overview.png" width="100%" />
