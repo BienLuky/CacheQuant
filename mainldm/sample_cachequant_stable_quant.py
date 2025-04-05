@@ -148,9 +148,9 @@ if __name__ == "__main__":
     parser.add_argument("--weight_bit",type=int,default=8)
     parser.add_argument("--act_bit",type=int,default=8)
     parser.add_argument("--quant_mode", type=str, default="qdiff", choices=["qdiff"])
-    parser.add_argument("--lr_w",type=float,default=5e-1)
-    parser.add_argument("--lr_a", type=float, default=1e-6)
-    parser.add_argument("--lr_z",type=float,default=1e-1)
+    parser.add_argument("--lr_w",type=float,default=1e-3)
+    parser.add_argument("--lr_a", type=float, default=1e-4)
+    parser.add_argument("--lr_z",type=float,default=0)
     parser.add_argument("--lr_rw",type=float,default=1e-3)
     parser.add_argument("--split", action="store_true", default=True)
     parser.add_argument("--ptq", action="store_true", default=True)
@@ -228,10 +228,11 @@ if __name__ == "__main__":
         set_weight_quantize_params_cond(q_unet, cali_data=(cali_data, t, context))
         set_act_quantize_params_cond(ori_interval_seq, q_unet, all_cali_data, all_t, all_cond, all_uncond, all_cache1, all_cache2, batch_size=4, cond_type="stable")
 
-        pre_err_list = torch.load(f"./error_dec/stable/pre_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_{benchmark}_list.pth")
-        q_unet.model.output_blocks[-1][0].skip_connection.pre_err = pre_err_list
-        pre_norm_err_list = torch.load(f"./error_dec/stable/pre_norm_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_{benchmark}_list.pth")
-        q_unet.model.output_blocks[-1][0].in_layers[2].pre_err = pre_norm_err_list
+        if args.recon is False:
+            pre_err_list = torch.load(f"./error_dec/stable/pre_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_{benchmark}_list.pth")
+            q_unet.model.output_blocks[-1][0].skip_connection.pre_err = pre_err_list
+            pre_norm_err_list = torch.load(f"./error_dec/stable/pre_norm_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_{benchmark}_list.pth")
+            q_unet.model.output_blocks[-1][0].in_layers[2].pre_err = pre_norm_err_list
 
         q_unet.set_quant_state(True, True)
         setattr(model.model, 'diffusion_model', q_unet)
@@ -261,6 +262,7 @@ if __name__ == "__main__":
                             recon_a=True,
                             keep_gpu=False,
                             interval_seq=ori_interval_seq,
+                            weight_bits=args.weight_bit,
                             )
             q_unet.set_quant_state(weight_quant=True, act_quant=args.quant_act)
 

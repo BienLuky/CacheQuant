@@ -164,8 +164,9 @@ if __name__ == "__main__":
         set_weight_quantize_params(q_unet, cali_data=(cali_data, t))
         set_act_quantize_params(args.interval_seq, q_unet, all_cali_data, all_t, all_cache)
 
-        pre_err_list = torch.load(f"./error_dec/cifar/pre_quanterr_abCov_weight{args.weight_bit}_interval{args.cache_interval}_list.pth")
-        q_unet.model.up[1].block[2].nin_shortcut.pre_err = pre_err_list
+        if args.recon is False:
+            pre_err_list = torch.load(f"./error_dec/cifar/pre_quanterr_abCov_weight{args.weight_bit}_interval{args.cache_interval}_list.pth")
+            q_unet.model.up[1].block[2].nin_shortcut.pre_err = pre_err_list
 
         q_unet.set_quant_state(True, True)
 
@@ -193,6 +194,7 @@ if __name__ == "__main__":
                             recon_a=True,
                             keep_gpu=False,
                             interval_seq=args.interval_seq,
+                            weight_bits=args.weight_bit,
                             )
             all_cali_data = torch.cat(all_cali_data)
             all_t = torch.cat(all_t)

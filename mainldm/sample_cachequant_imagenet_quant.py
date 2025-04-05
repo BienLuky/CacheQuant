@@ -95,7 +95,7 @@ if __name__ == "__main__":
     parser.add_argument("--weight_bit",type=int,default=8)
     parser.add_argument("--act_bit",type=int,default=8)
     parser.add_argument("--quant_mode", type=str, default="qdiff", choices=["qdiff"])
-    parser.add_argument("--lr_w",type=float,default=5e-1)
+    parser.add_argument("--lr_w",type=float,default=5e-3)
     parser.add_argument("--lr_a", type=float, default=1e-4)
     parser.add_argument("--lr_z",type=float,default=1e-1)
     parser.add_argument("--lr_rw",type=float,default=1e-2)
@@ -169,10 +169,11 @@ if __name__ == "__main__":
         set_weight_quantize_params_cond(q_unet, cali_data=(cali_data, t, context))
         set_act_quantize_params_cond(args.interval_seq, q_unet, all_cali_data, all_t, all_cond, all_uncond, all_cache1, all_cache2, cond_type="imagnet")
 
-        pre_err_list = torch.load(f"./error_dec/imagenet/pre_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_list.pth")
-        q_unet.model.output_blocks[-1][0].skip_connection.pre_err = pre_err_list
-        pre_norm_err_list = torch.load(f"./error_dec/imagenet/pre_norm_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_list.pth")
-        q_unet.model.output_blocks[-1][0].in_layers[2].pre_err = pre_norm_err_list
+        if args.recon is False:
+            pre_err_list = torch.load(f"./error_dec/imagenet/pre_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_list.pth")
+            q_unet.model.output_blocks[-1][0].skip_connection.pre_err = pre_err_list
+            pre_norm_err_list = torch.load(f"./error_dec/imagenet/pre_norm_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_list.pth")
+            q_unet.model.output_blocks[-1][0].in_layers[2].pre_err = pre_norm_err_list
 
         q_unet.set_quant_state(True, True)
         setattr(model.model, 'diffusion_model', q_unet)
@@ -202,6 +203,7 @@ if __name__ == "__main__":
                             recon_a=True,
                             keep_gpu=False,
                             interval_seq=args.interval_seq,
+                            weight_bits=args.weight_bit,
                             )
             q_unet.set_quant_state(weight_quant=True, act_quant=args.quant_act)
 
@@ -234,6 +236,7 @@ if __name__ == "__main__":
     if args.ptq:
         sampler.quant_sample = True
     imglogdir = "./error_dec/imagenet/image"
+    os.makedirs(imglogdir, exist_ok=True)
     base_count = 0
     wm = "StableDiffusionV1"
     wm_encoder = WatermarkEncoder()

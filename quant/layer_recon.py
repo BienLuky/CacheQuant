@@ -15,7 +15,7 @@ def layer_reconstruction(model: Quant_Model, layer: QuantModule, cali_data: torc
                          warmup: float = 0.0, act_quant: bool = False, weight_quant: bool = False, lr_a: float = 4e-5, lr_w=1e-2, lr_z=1e-1,
                          input_prob: float = 1.0, keep_gpu: bool = True, 
                          recon_w: bool = False, recon_a: bool = False, 
-                         cond: bool = False,
+                         cond: bool = False, weight_bits: int = 8,
                          recon_rw: bool = False, lr_rw=1e-6,
                          ):
     """
@@ -41,7 +41,8 @@ def layer_reconstruction(model: Quant_Model, layer: QuantModule, cali_data: torc
     if layer.skip_state == 2:
         recon_rw = True
         input_prob = 1.0
-    else:
+    elif layer.skip_state != 2 and weight_bits == 8:
+        print(f"quantization bits:{weight_bits}")
         return 0
     '''set state'''                                    
     layer.set_quant_state(weight_quant, act_quant)

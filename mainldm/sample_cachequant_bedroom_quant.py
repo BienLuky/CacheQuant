@@ -288,10 +288,11 @@ if __name__ == "__main__":
         set_weight_quantize_params(q_unet, cali_data=(cali_data, t))
         set_act_quantize_params(args.interval_seq, q_unet, all_cali_data, all_t, all_cache)
 
-        pre_err_list = torch.load(f"./error_dec/bedroom/pre_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_list.pth")
-        q_unet.model.output_blocks[-1][0].skip_connection.pre_err = pre_err_list
-        pre_norm_err_list = torch.load(f"./error_dec/bedroom/pre_norm_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_list.pth")
-        q_unet.model.output_blocks[-1][0].in_layers[2].pre_err = pre_norm_err_list
+        if args.recon is False:
+            pre_err_list = torch.load(f"./error_dec/bedroom/pre_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_list.pth")
+            q_unet.model.output_blocks[-1][0].skip_connection.pre_err = pre_err_list
+            pre_norm_err_list = torch.load(f"./error_dec/bedroom/pre_norm_quanterr_abCov_weight{args.weight_bit}_interval{args.replicate_interval}_list.pth")
+            q_unet.model.output_blocks[-1][0].in_layers[2].pre_err = pre_norm_err_list
 
         q_unet.set_quant_state(True, True)
         setattr(model.model, 'diffusion_model', q_unet)
@@ -321,6 +322,7 @@ if __name__ == "__main__":
                             recon_a=True,
                             keep_gpu=False,
                             interval_seq=args.interval_seq,
+                            weight_bits=args.weight_bit,
                             )
             q_unet.set_quant_state(weight_quant=True, act_quant=args.quant_act)
 
@@ -346,6 +348,7 @@ if __name__ == "__main__":
     model.model.reset_no_cache(no_cache=False)
     model.model.diffusion_model.model.time = 0
     imglogdir = "./error_dec/bedroom/image"
+    os.makedirs(imglogdir, exist_ok=True)
 
     logging.info("sampling...")
     model.interval_seq = args.interval_seq
