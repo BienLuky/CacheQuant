@@ -79,10 +79,10 @@ If you find this work useful in your research, please consider citing our paper:
 
 ```bibtex
 @article{liu2025cachequant,
-      title={CacheQuant: Comprehensively Accelerated Diffusion Models}, 
-      author={Xuewen Liu and Zhikai Li and Qingyi Gu},
-      journal={arXiv},
-      year={2025}
+  title={CacheQuant: Comprehensively Accelerated Diffusion Models},
+  author={Liu, Xuewen and Li, Zhikai and Gu, Qingyi},
+  journal={arXiv preprint arXiv:2503.01323},
+  year={2025}
 }
 ```
 
