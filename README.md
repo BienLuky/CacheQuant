@@ -42,7 +42,7 @@ python ./mainldm/sample_cachequant_imagenet_predadd.py
 ```
 3. Calculate DEC for Cache
 ```bash
-python ./err_add/imagenet/cache_draw.py --error cache
+python ./err_add/imagenet/imagenet_dec.py --error cache
 ```
 4. Get Quantized Parameters
 ```bash
@@ -50,7 +50,7 @@ python ./mainldm/sample_cachequant_imagenet_params.py
 ```
 5. Calculate DEC for Quantization
 ```bash
-python ./err_add/imagenet/cache_draw.py --error quant
+python ./err_add/imagenet/imagenet_dec.py --error quant
 ```
 6. Acceleration and Sample
 ```bash
