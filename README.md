@@ -21,7 +21,8 @@ conda activate cachequant
 ```
 
 ### 💠 Pretrained Model
-Pre-trained models for DDPM are automatically downloaded by the code. For LDM and Stable Diffusion experiments, download relevant pre-trained models to `mainldm/models/ldm` following the instructions in the *[latent-diffusion](https://github.com/CompVis/latent-diffusion#model-zoo)* and *[stable-diffusion](https://github.com/CompVis/stable-diffusion#weights)* repos. 
+Pre-trained models for DDPM are automatically downloaded by the code. For LDM and Stable Diffusion experiments, download relevant pre-trained models to `mainldm/models/ldm` following the instructions in the *[latent-diffusion](https://github.com/CompVis/latent-diffusion#model-zoo)* and *[stable-diffusion](https://github.com/CompVis/stable-diffusion#weights)* repos, **Note:** The LDM weights are based on the **cin256-v2** version, which we provide at the following [link](https://drive.google.com/file/d/1C5l37OobWZiHoeFwO0NyKfequ5aN9iol/view?usp=drive_link).
+
 
 ### 📕 Data
 Please download all original datasets used for evaluation from each dataset’s official website. We provide prompts for Stable Diffusion in `mainldm/prompt`. 
